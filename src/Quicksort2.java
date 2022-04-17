@@ -1,4 +1,3 @@
-import sun.jvm.hotspot.utilities.Assert;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -10,7 +9,7 @@ import java.util.Scanner;
 public class Quicksort2 {
 
     public static void main(String[] args){
-       /* Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         ArrayList<Integer> list = new ArrayList();
 
         boolean error = false;
@@ -27,66 +26,75 @@ public class Quicksort2 {
             for (int i = 0; i < array.length; i++) {
                 array[i] = list.get(i);
             }
+            qsort(array);
+            assert isSorted(array);
+            if(array.length <= 20) {
+                System.out.println(Arrays.toString(array));
+            }
+            double median = median(array);
+            System.out.println("Max:" + array[0]+ " Median:" + median + " Min:" + array[array.length-1]);
 
-        }*/
-        int [] data = new int[] {5,8, 1,4,4, 9,2,3};
-        qsort(data);
-        assert isSorted(data);
-        System.out.println(Arrays.toString(data));
+       }
+
+    }
+
+    public static double median(int[] array){
+        if(array.length%2 == 0){
+            return array[array.length/2] + array[array.length/2 + 1] / 2.0;
+        } else {
+            return array[array.length/2];
+        }
     }
 
 
     public static int[] partition(int data[], int l, int r){
-        int p1 = l;
-        int p2 = r;
-        int p1Index = l;
-        int p2Index = r;
-        if(data[l] == Math.max(data[l], data[r])){
-            p1 = data[l];
-            p1Index = l;
-            p2 = data[r];
-            p2Index = r;
-        } else {
-            p1 = data[r];
-            p1Index = r;
-            p2 = data[l];
-            p2Index = l;
+        if(data[l] < data[r]){
+            swap(data, l, r);
         }
+        int p1 = data[l];
+        int p2 = data[r];
+        int p1Index = l + 1;
+        int p2Index = r -1;
+        int i = p1Index;
 
-        int temp;
-        if(r-l > 1) {
-            for (int i = l; i <= r; i++) {
-
-                if(data[i]> p1){
-                    data[p1Index]= data[i];
-                    data[i] = data[p1Index+1 ];
-                    data[p1Index+1] = p1;
-
-                } else if(data[i]< p2){
-                    data[p2Index] = data[i];
-                    data[i] = data[p2Index+1];
-                    data[p2Index+1] = p2;
+        while (i<= p2Index){
+            if(data[i]> p1){
+                swap(data, p1Index, i);
+                p1Index++;
+            } else if(data[i] <= p2){
+                while(data[p2Index] < p2&& i < p2Index){
+                    p2Index--;
                 }
-
+                swap(data, i, p2Index);
+                p2Index--;
+                if(data[i] > p1){
+                    swap(data, i, p1Index);
+                    p1Index++;
+                }
             }
-
-        } else{
-            if(data[l] < data[r]){
-                temp = data[l];
-                data[l] = data[r];
-                data[r]= temp;
-            }
+            i++;
         }
+        p1Index--;
+        p2Index++;
+
+        swap(data, l, p1Index);
+        swap(data, r, p2Index);
 
         return new int[] {p1Index, p2Index};
+    }
+
+    private static void swap(int[] toSwap, int index1, int index2){
+        int temp = toSwap[index1];
+        toSwap[index1] = toSwap[index2];
+        toSwap[index2] = temp;
     }
 
     public static void qsort(int[] data, int l, int r){
         if(l< r){
             int[] m = partition(data, l, r);
-           qsort(data, l, m[1]);
-            qsort(data, m[1], m[2]);
-            qsort(data, m[2], l);
+           qsort(data, l, m[0] -1);
+            qsort(data, m[0] +1, m[1]-1);
+            qsort(data, m[1]+1, r);
         }
 
     }
