@@ -91,7 +91,7 @@ public class Quicksort {
         qsort(data, 0, data.length-1);
         Instant end = Instant.now();
         long time = Duration.between(start, end).toMillis();
-        System.out.println("qsort took" +  time+ "ms");
+        System.out.println("qsort took" +  time+ " ms");
     }
 
 
