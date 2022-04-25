@@ -1,4 +1,5 @@
 
+import java.awt.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Quicksort2 {
             try{
                 list.add(scanner.nextInt());
             } catch (InputMismatchException e){
+                System.out.println(e.getStackTrace());
                 System.out.println("Eingabe muss ein int sein");
                 error = true;
             }
@@ -26,12 +28,17 @@ public class Quicksort2 {
             for (int i = 0; i < array.length; i++) {
                 array[i] = list.get(i);
             }
+            //array sortierent mit quicksort 2 piviots
             qsort(array);
+            //assert dass den Array sortiert ist
             assert isSorted(array);
+            //wenn das array kurzer als 20 ist ausdrucken
             if(array.length <= 20) {
                 System.out.println(Arrays.toString(array));
             }
+            //median von denn array finden
             double median = median(array);
+            // max median und min von sortiertes array finden
             System.out.println("Max:" + array[0]+ " Median:" + median + " Min:" + array[array.length-1]);
 
        }
@@ -39,15 +46,20 @@ public class Quicksort2 {
     }
 
     public static double median(int[] array){
+        //wenn array ein gerade lange hat dann die durchschnitt von die zwei
+        // mittere Zahlen nehmen
         if(array.length%2 == 0){
             return array[array.length/2] + array[array.length/2 + 1] / 2.0;
-        } else {
+        }
+        // sonst die median ist array.lenght/2 weil integer division
+        else {
             return array[array.length/2];
         }
     }
 
 
     public static int[] partition(int data[], int l, int r){
+        // piviots in die richtige stelle stellen
         if(data[l] < data[r]){
             swap(data, l, r);
         }
@@ -58,15 +70,21 @@ public class Quicksort2 {
         int i = p1Index;
 
         while (i<= p2Index){
-            if(data[i]> p1){
+            // wenn i grosser als erste pivot dann mit p1Index tauschen und p1Index anpassen
+            if(data[i]>= p1){
                 swap(data, p1Index, i);
                 p1Index++;
-            } else if(data[i] <= p2){
+            }
+            // wenn i kleine gleich dass zweite pivot ist in denn richtigen platz setzen
+            else if(data[i] <= p2){
+                // i zum richtigen index tauschen  dann p2Index anpassen
                 while(data[p2Index] < p2&& i < p2Index){
                     p2Index--;
                 }
                 swap(data, i, p2Index);
                 p2Index--;
+                // wenn die wert die mit i vertauscht wurde grosser als p1 ist, dann
+                // in die richtigen platz vor p1 setzen
                 if(data[i] > p1){
                     swap(data, i, p1Index);
                     p1Index++;
@@ -77,6 +95,7 @@ public class Quicksort2 {
         p1Index--;
         p2Index++;
 
+        //pivots sind immer noch an l und r indexes werden dann zu die richtigen gesetzt
         swap(data, l, p1Index);
         swap(data, r, p2Index);
 
@@ -90,6 +109,7 @@ public class Quicksort2 {
     }
 
     public static void qsort(int[] data, int l, int r){
+        //q sort wiederrufen bis die pivots gleich sind dann ist die array sortiert
         if(l< r){
             int[] m = partition(data, l, r);
            qsort(data, l, m[0] -1);
@@ -100,6 +120,7 @@ public class Quicksort2 {
     }
 
     public static void qsort(int[] data){
+        // qsort rufen und messen wie lang es dauert denn array zu sortieren
         Instant start = Instant.now();
         qsort(data, 0, data.length-1);
         Instant end = Instant.now();
